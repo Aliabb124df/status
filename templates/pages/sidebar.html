@@ -1,0 +1,94 @@
+{% extends "pages/base.html" %} 
+
+{%block title%}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+    crossorigin="anonymous">
+
+
+{%block titleside%}
+{% endblock titleside %}
+
+<style> 
+    a {
+        text-decoration: none;
+    }
+
+    a:hover {
+        cursor: pointer;
+    }
+
+    a.highlighted {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    } 
+    .sidebar {
+        justify-content: space-between;
+        position: fixed;
+        top: 30px;
+        right: -250px;
+        width: 200px;
+        height: 100%;
+        background-color: #a7d0fa;
+        color: rgb(18, 26, 28);
+        transition: right 0.3s;
+        padding: 35px;
+    }
+    .sidebar.active {
+        right: 0; 
+    }
+    .sidebar a {
+        color: rgb(23, 21, 21);
+        text-decoration: none;
+        padding: 25px;
+        margin-top: 10px;     
+    }
+    .toggle-btn {
+        margin: 20px;
+    }
+</style>
+
+{% endblock title%}
+
+{% block sidebaropen %}
+    <a href="#" id="toggleSidebar"><i class="fas fa-user-plus"></i> settings </a>
+{% endblock sidebaropen %} 
+
+{% block content %}
+        {% block contentside %}
+        {% endblock contentside%}
+        <div class="sidebar" id="sidebar">
+        <h5> settings </h5><br><br>
+        <a href="{% url 'choose_document' %}" id="choose_document"> choose document </a><br><br>
+        <a href="#" id="changeLanguage">language</a><br><br>
+        <a href="#" id="changeTheme"> theme</a><br><br>
+        <a href="{% url 'login_employee' %}"id="login_employee" >login logout employer</a><br><br>
+        <a href="#" id="closeSidebar">close</a>
+    </div>
+    <script>
+        const toggleButton = document.getElementById('toggleSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const closeButton = document.getElementById('closeSidebar');
+
+        toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('active');   
+        });
+
+        closeButton.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+
+            links.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    links.forEach(function(otherLink) {
+                        otherLink.classList.remove('highlighted');
+                    });
+                    this.classList.add('highlighted');
+                });
+            });
+        });
+    </script>
+{% endblock content%}

@@ -1,0 +1,41 @@
+<!-- wives.html -->
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>{{task_name}}</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="wives-container">
+    {% for member in family %}
+        <div class="card" 
+            data-national-id="{{ member.national_num }}" 
+            style="border: 1px solid #ccc; margin: 10px; padding: 10px; cursor: pointer;">
+            <h3>{{ member.first_name }}</h3>
+            <p>national id : {{ member.national_num }}</p>
+        </div>
+    {% endfor %}
+    <button onclick="goBack()">Cancel</button>
+
+    
+    
+</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+    $(document).ready(function(){
+        $('.card').on('click', function() {
+            var nationalId = $(this).data('national-id');
+            var url = `show_marriage_register?national_num=${nationalId}`;
+            window.location.href = url;
+
+           
+        });
+    });
+</script>
+</body>
+</html>

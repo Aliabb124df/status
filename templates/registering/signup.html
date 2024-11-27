@@ -1,0 +1,16 @@
+{% extends "pages/base.html" %}
+{%block title%}
+    sign up
+{% endblock %}
+{% block content %}
+    {{error}}
+    <div class = "row">
+        <div class = "col-3">
+            <form method="POST" action="">
+                {%csrf_token%}
+                {{user}}
+                <input type="submit" value="save">
+            </form>
+        </div>
+    </div>
+{% endblock %}

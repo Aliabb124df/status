@@ -1,0 +1,21 @@
+{% extends "pages/base.html" %}
+{%block title%}
+<title> {{task_name}} </title>
+{% endblock %}
+{% block content %}
+{{error}}
+<div style="display: flex;  flex-wrap: wrap">
+    <div class="card" style="width:fit-content ; border-radius: 5%; background: rgb(79, 229, 240); margin-left: 35%; margin-top: 10%;">
+        <div class="card-body" style="width: fit-content ;">
+            <div style="display: flex; ">
+                <h5 class="card-title"></h5>	 
+            </div>
+            <form method="POST">
+                {%csrf_token%}
+                <div style="padding: 15px;">{{form}} </div>              
+                <input type="submit" value="{{task_name}}" style="margin: 15px; align-items: center;" >
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
