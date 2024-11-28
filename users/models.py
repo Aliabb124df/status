@@ -33,7 +33,7 @@ class Person(models.Model):
     religion = models.CharField(max_length=9,choices=religion_person,default='muslim')
     gender = models.CharField(max_length=7,choices=gender_person,default='male')
     status = models.CharField(max_length=8,choices=status_person,default='single')
-    image = models.ImageField(upload_to='image/%y/%m/%d')
+    image = models.ImageField(upload_to='image/%y/%m/%d', blank=True, null=True)
 
     def __str__(self):
         return self.national_num
