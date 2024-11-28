@@ -301,3 +301,72 @@ def my_view(request):
     <!-- Your existing HTML content -->
 </body>
 </html>
+////////////////////////////////
+.nav {
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #9eb8e0, #a1e6eb);
+    padding: 2% 3%;
+    width: 100%;
+    margin-bottom:3% ;
+ 
+}
+.nav a {
+    color: rgb(33, 27, 27);
+    text-decoration: none;
+    padding: 8px 16px;
+    transition: background-color 0.3s;
+}
+.nav a:hover {
+    background-color: #575757;
+    border-radius: 4px;
+}
+.nav .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.nav .menu {
+    gap: 10px;
+}
+.nav .menu a {
+    align-items: center;
+    padding: 5px 10px; 
+}
+.nav .menu i {
+    margin-right: 5px;
+}
+.maindiv{
+    height: 100%;
+    display: flex;
+    gap: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    width: 100%;
+    margin-top: 10%;
+    }
+    /////////////////////////////////////
+    @media (max-width) {
+        .nav {
+            max-height: 3%;
+            padding: 10%;
+            margin-bottom:3% ;
+        }
+        .nav .menu {
+            flex-direction: row;
+            align-items: center;
+            
+        }
+        
+        .nav .logo {
+            font-size: 1.2em;
+        }
+        .fotter{
+            flex-direction: column;
+        }
+        .maindiv{
+            margin-top: 9%;
+            width: 100%;
+        }
+    }

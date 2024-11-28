@@ -64,7 +64,7 @@ def move_tasked_person(tasked_person):
     except:
         return HttpResponse('sorry there is an error please try anpther thing')
 
-def person_is_here(request):
+'''def person_is_here(request):
     try:
         page_name = 'person who not in the data base'
         name = user_is_logined(request=request)
@@ -79,7 +79,7 @@ def person_is_here(request):
             return
     except:
         return HttpResponse('sorry there is an error please try anpther thing')
-
+'''
 def add_person_information(request):   
     try:
         person_name=user_is_logined(request)
@@ -98,7 +98,7 @@ def add_person_information(request):
                 person_s.code = code
                 person_s.save()
                 request.session['document_code'] = code
-                return redirect(person_is_here)
+                #return redirect(person_is_here)
             else:
                 error = data.errors
         return render(request,'users/person_in.html',{'person':TaskPerson_in,'error':error,'task_name':task_name})
@@ -107,7 +107,6 @@ def add_person_information(request):
 
 def person_in(request):
     try:
-        person_name=user_is_logined(request)
         error=' '
         task_name = 'add person'
         if request.method == "POST":

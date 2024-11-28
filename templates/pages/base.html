@@ -11,87 +11,49 @@
     {% endblock %}
     <style>
         body {
-            margin-top: 5%;
-            margin-bottom: 10%;
-            justify-content: center;
-            align-items: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .navbar {
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(90deg, #9eb8e0, #a1e6eb);
-            padding: 10px 20px;
+        .container-fluid{
+            max-height:max-content;
+
+        }
+        .nav {
             width: 100%;
-            margin-bottom:3% ;
-         
+            top: 0;
+            left: 0;
+            position: fixed;
+            background: linear-gradient(90deg, #35373a, #909494);
+            z-index: 10000;
+            justify-content: space-between;
         }
-        .navbar a {
-            color: rgb(33, 27, 27);
-            text-decoration: none;
-            padding: 8px 16px;
-            transition: background-color 0.3s;
-        }
-        .navbar a:hover {
+        .nav li:hover {
+
             background-color: #575757;
             border-radius: 4px;
         }
-        .navbar .logo {
-            font-size: 1.5em;
-            font-weight: bold;
+        .nav li {
+            padding: 1% 7% 5px 5px;
+            color: aliceblue;
+
         }
-        .navbar .menu {
-            gap: 10px;
-        }
-        .navbar .menu a {
-            align-items: center;
-            padding: 5px 10px; 
-        }
-        .navbar .menu i {
-            margin-right: 5px;
+        .nav a{
+            color: aliceblue;
         }
         .maindiv{
-            height: 100%;
-            display: flex;
-            gap: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            width: 100%;
-            margin-top: 10%;
-            }
-        @media (max-width) {
-            .navbar {
-                max-height: 20px;
-                padding: 10%;
-                margin-bottom:3% ;
-            }
-            .navbar .menu {
-                flex-direction: row;
-                align-items: center;
-                gap: 10px;
-            }
-            .navbar .menu a {
-            padding: 5px 10px;
-            }
-            .navbar .logo {
-                font-size: 1.2em;
-            }
-            .fotter{
-                flex-direction: column;
-            }
-            .maindiv{
-                margin-top: 9%;
-                width: 100%;
-            }
+            margin-top: 10vh;
+            height: 100vh;
+            left: 0;
+            margin-bottom: 10vh;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef); /* خلفية بسيطة */
+
         }
         footer {
-            background-color: #343a40; /* لون خلفية الفوتر */
+            background-color: #2e3133; /* لون خلفية الفوتر */
             color: white; /* لون النص */
-            position: fixed; /* لضمان عدم تداخل الفوتر مع المحتوى */
-            bottom: 0;
             width: 100%; /* عرض الفوتر بالكامل */
+            position: relative; /* لضمان عدم تداخل الفوتر مع المحتوى */
+            left: 0;
+            bottom: 0;
             text-align: center;
         }
         
@@ -99,38 +61,34 @@
 </head>
 <body>
     <div class="container-fluid">
-        <div class="column">
-            <div class="navbar navbar-expand-sm navbar-light bg-light fixed-top fixed">
-                <div class="logo">
-                    <i class="fas fa-home"></i>
-                        {% if user.is_authenticated %}
-                        <a href="{% url 'person_show' %}">{{user.username}}</a>
-                        {% endif %}
-                </div>
-                <div class="menu">
-                    {% if user.is_authenticated %}
-                        {% block sidebaropen %}
-                        {% endblock sidebaropen %} 
-                        <a href="{% url 'main' %}"><i class="fas fa-home"></i> main </a>
-                       
-                    {% else %}
-                        <a href="{% url 'log_in' %}"><i class="fas fa-lock"></i> login </a>
-                        <a href="{% url 'sign_up' %}"><i class="fas fa-user-plus"></i> signup </a>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="maindiv">
-                {% block content %}
-                {% endblock %}
-            </div>
-            <footer class="fotter">
-                <div class=" text-center">
+        <ul class="nav nav-pills  nav-justified" >
+            <li class="active"><i class="fas fa-home"></i>
+                {% if user.is_authenticated %}
+                 welcome  <a href="{% url 'person_show' %}">{{user.username}}</a>
+                {% endif %}
+            </li>
+            <li>        
+                {% if user.is_authenticated %}
+                {% block sidebaropen %}
+                {% endblock sidebaropen %} 
+            </li>            
+            <li><a href="{% url 'main' %}"><i class="fas fa-home"></i> main </a></li>
+            {% else %}
+            <li><a href="{% url 'log_in' %}"><i class="fas fa-lock"></i> login </a></li>
+            <li><a href="{% url 'sign_up' %}"><i class="fas fa-user-plus"></i> signup </a></li>
+            {% endif %}       
+        </ul>
+    </div>
+        <div class="maindiv">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <footer class="fotter">
+            <div class=" text-center">
                     <h5>call us</h5>
                     <p>email</p>
                     <p>address</p>
                 </div>
             </footer>
-        </div>
-    </div>
 </body>
 </html>
