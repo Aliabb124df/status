@@ -39,7 +39,7 @@ class TaskPerson_in(ModelForm):
     '''
     def clean_national_id(self, field_name, field_label):
         data = self.cleaned_data[field_name]
-        if not data.startswith('0') or len(data) != 14:
+        if not data.startswith('0') or len(data) != 11:
             raise ValidationError(
                 f'wrong {field_label}  ',
                 code='invalid',
@@ -71,7 +71,7 @@ class TaskPerson_in(ModelForm):
 
     def clean_national_id(self, field_name):
         data = self.cleaned_data[field_name]
-        if not data.startswith('0') or len(data) != 14:
+        if not data.startswith('0') or len(data) != 11:
             raise ValidationError(
                 self.error_messages['invalid'],
                 code='invalid',
@@ -81,7 +81,7 @@ class TaskPerson_in(ModelForm):
 
 '''def clean_national_id(self, field_name, field_label):
         data = self.cleaned_data[field_name]
-        if not data.startswith('0') or len(data) != 14:
+        if not data.startswith('0') or len(data) != 11:
             raise ValidationError(
                 f'{field_label} غير صحيح',
                 code='invalid',

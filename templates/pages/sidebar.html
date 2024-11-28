@@ -59,12 +59,12 @@
         {% endblock contentside%}
         <div class="sidebar" id="sidebar">
         <h5> settings </h5><br><br>
+        <a href="{% url 'login_employee' %}"id="login_employee" >login logout employer</a><br><br>
         <a href="{% url 'log_out' %}"><i class="fas fa-sign-out-alt"></i>  logout </a>
         <a href="{% url 'reset_pass' %}"><i class="fas fa-envelope"></i> reset password </a>
         <a href="{% url 'choose_document' %}" id="choose_document"> choose document </a><br><br>
         <a href="#" id="changeLanguage">language</a><br><br>
         <a href="#" id="changeTheme"> theme</a><br><br>
-        <a href="{% url 'login_employee' %}"id="login_employee" >login logout employer</a><br><br>
         <a href="#" id="closeSidebar">close</a>
     </div>
     <script>
