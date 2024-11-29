@@ -13,73 +13,69 @@ from django.http import HttpResponse
 import csv
 
 def move_person(tasked_person):
-    try:
-        new_object_data = {
-            'person_name' : tasked_person.person_name,
-            'national_num' : tasked_person.national_num,
-            'first_name' : tasked_person.first_name,
-            'last_name' : tasked_person.last_name,
-            'dad_name' : tasked_person.dad_name,
-            'national_dad' : tasked_person.national_dad,
-            'mom_name' : tasked_person.mom_name,
-            'national_mom' : tasked_person.national_mom,
-            'birth_place' : tasked_person.birth_place,
-            'birth_date' : tasked_person.birth_date,
-            'date_of_issue' : tasked_person.date_of_issue,
-            'place_of_issue' : tasked_person.place_of_issue,
-            'number_of_issue' : tasked_person.number_of_issue,
-            'religion' : tasked_person.religion,
-            'gender' : tasked_person.gender,
-            'status' : tasked_person.status,
-            'image' : tasked_person.image,
-            }
-        person = Person.objects.create(**new_object_data)
-        return person
-    except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+    new_object_data = {
+        'person_name' : tasked_person.person_name,
+        'national_num' : tasked_person.national_num,
+        'first_name' : tasked_person.first_name,
+        'last_name' : tasked_person.last_name,
+        'dad_name' : tasked_person.dad_name,
+        'national_dad' : tasked_person.national_dad,
+        'mom_name' : tasked_person.mom_name,
+        'national_mom' : tasked_person.national_mom,
+        'birth_place' : tasked_person.birth_place,
+        'birth_date' : tasked_person.birth_date,
+        'date_of_issue' : tasked_person.date_of_issue,
+        'place_of_issue' : tasked_person.place_of_issue,
+        'number_of_issue' : tasked_person.number_of_issue,
+        'religion' : tasked_person.religion,
+        'gender' : tasked_person.gender,
+        'status' : tasked_person.status,
+        'image' : tasked_person.image,
+        }
+    person = Person.objects.create(**new_object_data)
+    return person
 
 def move_tasked_person(tasked_person):
-    try:
-        new_object_data = {
-            'person_name' : tasked_person.person_name,
-            'national_num' : tasked_person.national_num,
-            'first_name' : tasked_person.first_name,
-            'last_name' : tasked_person.last_name,
-            'dad_name' : tasked_person.dad_name,
-            'national_dad' : tasked_person.national_dad,
-            'mom_name' : tasked_person.mom_name,
-            'national_mom' : tasked_person.national_mom,
-            'birth_place' : tasked_person.birth_place,
-            'birth_date' : tasked_person.birth_date,
-            'date_of_issue' : tasked_person.date_of_issue,
-            'place_of_issue' : tasked_person.place_of_issue,
-            'number_of_issue' : tasked_person.number_of_issue,
-            'religion' : tasked_person.religion,
-            'gender' : tasked_person.gender,
-            'status' : tasked_person.status,
-            'image' : tasked_person.image,
-            }
-        person = TaskPerson.objects.create(**new_object_data)
-        return person
-    except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+    new_object_data = {
+        'person_name' : tasked_person.person_name,
+        'national_num' : tasked_person.national_num,
+        'first_name' : tasked_person.first_name,
+        'last_name' : tasked_person.last_name,
+        'dad_name' : tasked_person.dad_name,
+        'national_dad' : tasked_person.national_dad,
+        'mom_name' : tasked_person.mom_name,
+        'national_mom' : tasked_person.national_mom,
+        'birth_place' : tasked_person.birth_place,
+        'birth_date' : tasked_person.birth_date,
+        'date_of_issue' : tasked_person.date_of_issue,
+        'place_of_issue' : tasked_person.place_of_issue,
+        'number_of_issue' : tasked_person.number_of_issue,
+        'religion' : tasked_person.religion,
+        'gender' : tasked_person.gender,
+        'status' : tasked_person.status,
+        'image' : tasked_person.image,
+        }
+    person = TaskPerson.objects.create(**new_object_data)
+    return person
 
-'''def person_is_here(request):
+def person_is_here(request):
     try:
+        print('here')
         page_name = 'person who not in the data base'
         name = user_is_logined(request=request)
         logged_person = request.session.get('employee','0')
         if logged_person =='0':
-            if  Person.objects.filter(person_name=name).exists() :
+            if Person.objects.filter(person_name=name).exists() :
+                return redirect(main)
+            else:
                 if TaskPerson.objects.filter(person_name=name).exists() :
                     choices = ['add personal information','show new documents']
                     return render(request,'pages/main.html',{'choices':choices,'page_name':page_name})
                 else:    
-                    return redirect(add_person_information)
-            return
+                    return redirect(add_person_information)            
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
-'''
+        return HttpResponse('sorry there is an error please try another thing')
+
 def add_person_information(request):   
     try:
         person_name=user_is_logined(request)
@@ -98,12 +94,15 @@ def add_person_information(request):
                 person_s.code = code
                 person_s.save()
                 request.session['document_code'] = code
-                #return redirect(person_is_here)
+                print('1')
+                return redirect(person_is_here)
             else:
                 error = data.errors
         return render(request,'users/person_in.html',{'person':TaskPerson_in,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        print('2')
+
+        return HttpResponse('sorry there is an error please try another thing')
 
 def person_in(request):
     try:
@@ -127,7 +126,7 @@ def person_in(request):
                 error = data.errors
         return render(request,'users/person_in.html',{'person':TaskPerson_in,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def person_save(request):
     try:
@@ -139,7 +138,7 @@ def person_save(request):
         if Person.objects.filter(national_num=second_national_num).exists():
             person_added = Person.objects.get(national_num=second_national_num)
             if person_added.person_name == None :
-                tasked_person_added = TaskPerson.objects.get(national_num=second_national_num)
+                tasked_person_added = TaskPerson.objects.get(code=document_code)
                 person_added = move_person(tasked_person_added)
                 if request.method == "POST":
                     person_added.save()
@@ -149,7 +148,7 @@ def person_save(request):
                 error = 'the asked person can not modify'
         return render(request,'users/person_save.html',{'person':person_added,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def information_save(request):
     try:
@@ -161,7 +160,7 @@ def information_save(request):
         if Person.objects.filter(national_num=person_national_num).exists():
             past_person = Person.objects.get(national_num=person_national_num)
             past_person.delete()
-        tasked_person_added = TaskPerson.objects.get(national_num=person_national_num)
+        tasked_person_added = TaskPerson.objects.get(code=document_code)
         tasked_person_added_name =tasked_person_added.person_name
         if Person.objects.filter(person_name=tasked_person_added_name).exists():
             past_person = Person.objects.get(person_name=tasked_person_added_name)
@@ -173,84 +172,69 @@ def information_save(request):
             documents.views.delete_document(request)
         return render(request,'users/person_save.html',{'person':person_added,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def get_by_obj(national_num):
-    try:
-        if Person.objects.filter(national_num = national_num).exists() :
-            user = Person.objects.get(national_num = national_num)
-        else :
-            user = Person.objects.get(national_num = '00000000000')
-        return user
-    except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+    if Person.objects.filter(national_num = national_num).exists() :
+        user = Person.objects.get(national_num = national_num)
+    else :
+        user = Person.objects.get(national_num = '00000000000')
+    return user
 
 def user_is_logined(request):
-    try:
-        if request.user.is_authenticated:
-            name = request.user.username
-            return name
-        else :
-            return redirect ('../registering/log_in')
-    except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+    if request.user.is_authenticated:
+        name = request.user.username
+        return name
+    else :
+        return redirect ('../registering/log_in')
 
 def get_marrid(person):
-    try:
-        marrid_partner=[]
-        if person.gender == 'male':
-            partners = Marrid.objects.filter(national_hus=person.national_num)
-            if len(partners) !=0:
-                for partner in partners :
-                    marrid_partner.append(Person.objects.get(national_num=partner.national_wife))
-        else :
-            partners = Marrid.objects.filter(national_wife=person.national_num)
-            if len(partners) !=0:
-                for partner in partners :
-                    marrid_partner.append(Person.objects.get(national_num=partner.national_hus))
-        return marrid_partner
-    except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+    marrid_partner=[]
+    if person.gender == 'male':
+        partners = Marrid.objects.filter(national_hus=person.national_num)
+        if len(partners) !=0:
+            for partner in partners :
+                marrid_partner.append(Person.objects.get(national_num=partner.national_wife))
+    else :
+        partners = Marrid.objects.filter(national_wife=person.national_num)
+        if len(partners) !=0:
+            for partner in partners :
+                marrid_partner.append(Person.objects.get(national_num=partner.national_hus))
+    return marrid_partner
 
 def get_divorce(person):
-    try:
-        divorce_partner=[]
-        if person.gender == 'male':
-            partners = Divorce.objects.filter(national_hus=person.national_num)
+    divorce_partner=[]
+    if person.gender == 'male':
+        partners = Divorce.objects.filter(national_hus=person.national_num)
+        if len(partners) !=0:
+            for partner in partners :
+                divorce_partner.append(Person.objects.get(national_num=partner.national_wife))
+        else :
+            partners = Divorce.objects.filter(national_wife=person.national_num)
             if len(partners) !=0:
                 for partner in partners :
-                    divorce_partner.append(Person.objects.get(national_num=partner.national_wife))
-            else :
-                partners = Divorce.objects.filter(national_wife=person.national_num)
-                if len(partners) !=0:
-                    for partner in partners :
-                        divorce_partner.append(Person.objects.get(national_num=partner.national_hus))
-        return divorce_partner
-    except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+                    divorce_partner.append(Person.objects.get(national_num=partner.national_hus))
+    return divorce_partner
          
 def get_family(national_num):
-    try:
-        family = []
-        person = Person.objects.get(national_num=national_num)
-        if person.gender == 'male':
-            family.append(person)
-            family_member = Person.objects.filter(national_dad=person.national_num)
+    family = []
+    person = Person.objects.get(national_num=national_num)
+    if person.gender == 'male':
+        family.append(person)
+        family_member = Person.objects.filter(national_dad=person.national_num)
 
-        marrid_member = get_marrid(person)
-        for user in marrid_member :
-            family.append(user)
+    marrid_member = get_marrid(person)
+    for user in marrid_member :
+        family.append(user)
 
-        if person.gender != 'male':
-            family.append(person)
-            family_member = Person.objects.filter(national_mom=person.national_num)
+    if person.gender != 'male':
+        family.append(person)
+        family_member = Person.objects.filter(national_mom=person.national_num)
 
-        for user in family_member :
-            family.append(user)
+    for user in family_member :
+        family.append(user)
 
-        return family 
-    except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+    return family 
 
 def person_show(request):
     try:
@@ -260,7 +244,7 @@ def person_show(request):
         request.session['task_name'] = task_name
         return render(request,'users/person_in.html',{'person':person,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def main(request):
     try:
@@ -269,7 +253,7 @@ def main(request):
         choices = ['choose document','assert information','show documents']
         return render(request,'pages/main.html',{'choices':choices,'page_name':page_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def assert_information(request):
     user_is_logined(request=request)
@@ -282,7 +266,7 @@ def get_choice(request):
         if request.method == 'POST':
             name = request.POST.get('name')
             choices = {
-                'show new documents':'../documenys/show_new_documents',
+                'show new documents':'../documents/show_new_documents',
                 'choose document':'../documents/choose_document',
                 'assert information':'assert_information',
                 'show documents':'../documents/show_documents',
@@ -299,7 +283,7 @@ def get_choice(request):
             return JsonResponse({'status': 'redirect', 'url': url})
         return JsonResponse({'status': 'fail'}, status=400)
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def parent_in(request):#add parent
     try:
@@ -325,7 +309,7 @@ def parent_in(request):#add parent
                 error = data.errors
         return render(request,'users/parent.html',{'parent':Parent_in,'error':error,'person_name':person_name,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def parent_save(request):
     try:
@@ -358,7 +342,7 @@ def parent_save(request):
                 error = 'the person who asked not inserted his informations'
         return render(request,'users/person_save.html',{'person':tasked_parent,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def index(request):
     try:
@@ -378,7 +362,7 @@ def index(request):
         file.close()
         return render(request,'pages/pages.html',{'dex':dex})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
     
 def event_in(request):
     try:
@@ -420,7 +404,7 @@ def event_in(request):
                 error = data.errors
         return render(request,'users/partner.html',{'event':Partner_in,'error':error,'person_name':person_name,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def partner_in(request):
     try:
@@ -461,7 +445,7 @@ def partner_in(request):
                 error = data.errors
         return render(request,'users/partner_in.html',{'person':TaskPerson_in,'error':error,'person_name':person_name,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def add_marrid(request):
     try:
@@ -501,7 +485,7 @@ def add_marrid(request):
                 error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':partner,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
  
 def add_divorce(request):
     try:
@@ -540,7 +524,7 @@ def add_divorce(request):
             error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':partner,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
  
 def add_widower(request):
     try:
@@ -578,28 +562,25 @@ def add_widower(request):
                 error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':partner,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
  
 def get_first_relation(person):
-    try:
-        first_relation = []
-        for x in Person.objects.filter(national_num=person.national_dad):
-            first_relation.append(x)    
-        for x in Person.objects.filter(national_num=person.national_mom):
-            first_relation.append(x)    
-        for x in Person.objects.filter(national_dad=person.national_dad):
-            first_relation.append(x)    
-        for x in Person.objects.filter(national_mom=person.national_mom):
-            first_relation.append(x)    
-        for x in Person.objects.filter(national_dad=person.national_num):
-            first_relation.append(x)    
-        for x in Person.objects.filter(national_mom=person.national_num):
-            first_relation.append(x)    
-        for partner in get_marrid(person) :
-            first_relation.append(partner)
-        return first_relation
-    except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+    first_relation = []
+    for x in Person.objects.filter(national_num=person.national_dad):
+        first_relation.append(x)    
+    for x in Person.objects.filter(national_num=person.national_mom):
+        first_relation.append(x)    
+    for x in Person.objects.filter(national_dad=person.national_dad):
+        first_relation.append(x)    
+    for x in Person.objects.filter(national_mom=person.national_mom):
+        first_relation.append(x)    
+    for x in Person.objects.filter(national_dad=person.national_num):
+        first_relation.append(x)    
+    for x in Person.objects.filter(national_mom=person.national_num):
+        first_relation.append(x)    
+    for partner in get_marrid(person) :
+        first_relation.append(partner)
+    return first_relation
 
 def death_record(request):
     try:
@@ -637,7 +618,7 @@ def death_record(request):
                 error = data.errors
         return render(request,'users/died_person.html',{'died':Dead_in,'error':error,'person_name':name,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def died_person_record(request):
     try:
@@ -670,7 +651,7 @@ def died_person_record(request):
                 error = data.errors
         return render(request,'users/partner_in.html',{'person':TaskPerson_in,'error':error,'person_name':person_name,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def death_save(request):
     try:
@@ -712,7 +693,7 @@ def death_save(request):
                 error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':tasked_dead,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
  
 
     

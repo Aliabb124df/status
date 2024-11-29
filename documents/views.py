@@ -31,14 +31,13 @@ def send_email_view(request):
     return render(request, 'mail/mail.html')
 
 def get_person(request):
-    try :
         name = user_is_logined(request=request)
         logged_person = request.session.get('employee','0')
         if logged_person =='0':
             if Person.objects.filter(person_name=name).exists() :
                 person = Person.objects.get(person_name=name)
             elif TaskPerson.objects.filter(person_name=name).exists() :
-                person = TaskPerson.objects.get(person_name=name)
+                person = TaskPerson.objects.get(person_name=name,code=None)
             
         else :
             document_code = request.session.get('document_code','0')
@@ -47,10 +46,8 @@ def get_person(request):
             if Person.objects.filter(national_num=person_national_num).exists() :
                 person = Person.objects.get(national_num=person_national_num)
             elif TaskPerson.objects.filter(national_num=person_national_num).exists() :
-                person = TaskPerson.objects.get(national_num=person_national_num)
+                person = TaskPerson.objects.get(national_num=person_national_num,code=None)
         return person
-    except:
-        return HttpResponse('sorry there is an error please try anpther thing')
 
 def refuse_with_note(request):
     try :
@@ -75,7 +72,7 @@ def refuse_with_note(request):
                 error = data.errors
         return render(request,'documents/note.html',{'form':Send_notes,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def send_notes(request):
     try :
@@ -101,7 +98,7 @@ def send_notes(request):
                 error = data.errors
         return render(request,'documents/note.html',{'form':Send_notes,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def family_register(request):
     try :
@@ -117,7 +114,7 @@ def family_register(request):
         employee = request.session.get('employee','0')
         return render(request,'documents/confirm_family.html',{'person':person,'family':family,'task_name':task_name,'event':event,'employee':employee})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def birth_register(request):
     try :
@@ -128,7 +125,7 @@ def birth_register(request):
         employee = request.session.get('employee','0')
         return render(request,'documents/confirm_person.html',{'person':person,'task_name':task_name,'event':event,'employee':employee})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def show_marriage_register(request):
     try :
@@ -164,7 +161,7 @@ def show_marriage_register(request):
         employee = request.session.get('employee','0')
         return render(request,'documents/confirm_family.html',{'person':person,'family':family,'task_name':task_name,'event':event,'employee':employee})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def marriage_register(request):
     try :
@@ -179,7 +176,7 @@ def marriage_register(request):
             task_name = 'marriage register'
         return render(request,'documents/show_all.html',{'person':person,'family':family,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
     
 def divorce_register(request):
     try :
@@ -195,7 +192,7 @@ def divorce_register(request):
         request.session['task_name'] = 'divorce register'
         return render(request,'documents/show_all.html',{'person':person,'family':divorce_group,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def dead_register_show(request):
     try :
@@ -223,7 +220,7 @@ def dead_register_show(request):
             error = "there's no one dead with this national number"
         return render(request,'documents/confirm_person.html',{'person':person,'task_name':task_name,'person_name':person_name,'error':error,'event':event,'employee':employee})         
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def dead_register(request):
     try :
@@ -254,7 +251,7 @@ def dead_register(request):
                     error = "there's no one dead with this national number"
         return render(request,'documents/note.html',{'form':Dead_register,'error':error,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def choose_document(request):
     try :
@@ -262,7 +259,7 @@ def choose_document(request):
         documents = ['family register','birth register','marriage register','divorce register','dead register']
         return render(request,'documents/choose_document.html',{'documents':documents,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def get_document(request):
     try :
@@ -280,7 +277,7 @@ def get_document(request):
             return JsonResponse({'status': 'redirect', 'url': url})
         return JsonResponse({'status': 'fail'}, status=400)
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def review_task(request):
     try :
@@ -294,7 +291,7 @@ def review_task(request):
         employee = request.session.get('employee','0')
         return render(request,'documents/review_task.html',{'document':document,'task_name':task_name,'employee':employee}) 
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def show_documents(request):
     try :
@@ -309,35 +306,32 @@ def show_documents(request):
             documents = Document.objects.filter(viewed=False)
         return render(request,'documents/show_documents.html',{'documents':documents,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def show_new_documents(request):
     try :
         name = user_is_logined(request=request) 
-        employee = request.session.get('employee','0')
-        person = TaskPerson.objects.get(person_name=name)
         task_name = 'show documents'
         documents = []
-        if employee == '0':
-            documents = Document.objects.filter(person_name=person.person_name)
-        else :
-            documents = Document.objects.filter(viewed=False)
+        person_tasks = TaskPerson.objects.filter(person_name=name)
+        for task in person_tasks:
+            document = Document.objects.get(code=task.code)
+            documents.append(document)
         return render(request,'documents/show_documents.html',{'documents':documents,'task_name':task_name})
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
-
+        return HttpResponse('sorry there is an error please try another thing')
 
 def delete_document(request):
+    document_code = request.session.get('document_code','0')
+    document = Document.objects.get(code=document_code)
+    if TaskPerson.objects.filter(code=document_code).exists():
+        TaskPerson.objects.get(code=document_code).delete()
+    document.delete()
     try :
-        document_code = request.session.get('document_code','0')
-        document = Document.objects.get(code=document_code)
-        if TaskPerson.objects.filter(code=document_code).exists():
-            TaskPerson.objects.get(code=document_code).delete()
-        document.delete()
         del request.session['document_code']
-        return redirect(show_documents)
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
+    return redirect(show_documents)
 
 def insert_task(request):
     try :
@@ -360,35 +354,32 @@ def insert_task(request):
             del request.session['second_national_num']
         return redirect(main)
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 
 def insert_task_code(request):
-    try :
-        last_document = Document.objects.order_by('code').last()
-        if last_document:
-            code = int(last_document.code) + 1
-            code = str(code).zfill(8)
-        person = get_person(request)
-        task_name = request.session.get('task_name','0')
-        person_national_num = person.national_num
-        second_national_num =request.session.get('second_national_num',None)
-        done = False
-        notes = '  '
-        document = Document(
-            name=task_name,
-            code=code,
-            person_national_num=person_national_num,
-            second_national_num=second_national_num,
-            done=done,
-            notes=notes
-            )
-        document.save()
-        del request.session['task_name']
-        request.session['second_national_num']='ads'
-        del request.session['second_national_num']
-        return code
-    except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+    last_document = Document.objects.order_by('code').last()
+    if last_document:
+        code = int(last_document.code) + 1
+        code = str(code).zfill(8)
+    person = get_person(request)
+    task_name = request.session.get('task_name','0')
+    person_national_num = person.national_num
+    second_national_num =request.session.get('second_national_num',None)
+    viewed = False
+    notes = '  '
+    document = Document(
+        name=task_name,
+        code=code,
+        person_national_num=person_national_num,
+        second_national_num=second_national_num,
+        viewed=viewed,
+        notes=notes
+        )
+    document.save()
+    del request.session['task_name']
+    request.session['second_national_num']='ads'
+    del request.session['second_national_num']
+    return code
 
 def insert_document(request):
     try :
@@ -413,5 +404,5 @@ def insert_document(request):
         url = path
         return redirect(url)
     except:
-        return HttpResponse('sorry there is an error please try anpther thing')
+        return HttpResponse('sorry there is an error please try another thing')
 

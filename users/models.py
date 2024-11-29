@@ -71,8 +71,8 @@ class TaskPerson(models.Model):
     gender = models.CharField(max_length=7,choices=gender_person,default='male')
     status = models.CharField(max_length=8,choices=status_person,default='single')
     image = models.ImageField(upload_to='image/%y/%m/%d', blank=True, null=True)
-    date_of_event = models.DateField(null=True)
-    place_of_event =models.CharField(max_length=15,null=True)
+    date_of_event = models.DateField(blank=True, null=True)
+    place_of_event =models.CharField(max_length=15,blank=True, null=True)
     code = models.CharField(max_length=15,null=True)
     
     def __str__(self):

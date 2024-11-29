@@ -1,6 +1,5 @@
 from django.urls import path
-from .views import person_in,main,parent_save,parent_in,index,user_is_logined,person_show,partner_in,assert_information,get_choice,death_record,person_save,add_person_information,add_marrid,add_divorce,add_widower,death_save,event_in,died_person_record,information_save
-#,person_is_here
+from .views import person_in,main,parent_save,parent_in,index,user_is_logined,person_show,partner_in,assert_information,get_choice,death_record,person_save,add_person_information,add_marrid,add_divorce,add_widower,death_save,event_in,died_person_record,information_save,person_is_here
 urlpatterns = [
    
     path('person_in', person_in,name='person_in'),
@@ -23,7 +22,7 @@ urlpatterns = [
     path('event_in', event_in,name='event_in'),
     path('died_person_record',died_person_record ,name='died_person_record'),
     path('information_save',information_save ,name='information_save'),
-    #path('person_is_here', person_is_here,name='person_is_here'),
+    path('person_is_here', person_is_here,name='person_is_here'),
     #path('', ,name=''),
     #path('', ,name=''),
     #path('', ,name=''),
