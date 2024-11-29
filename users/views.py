@@ -113,7 +113,7 @@ def person_in(request):
                 data.save()
                 Person_s = TaskPerson.objects.get(national_num = national_num,code=None)
                 national_num = Person_s.national_num
-                request.session['task_name'] = 'task_name'
+                request.session['task_name'] = task_name
                 request.session['second_national_num'] = national_num
                 code = documents.views.insert_task_code(request)
                 Person_s.code = code
@@ -127,7 +127,6 @@ def person_in(request):
         
 
 def person_save(request):
-    
         error=' '
         task_name = 'save person'
         document_code = request.session.get('document_code','0')

@@ -32,7 +32,6 @@ def send_email_view(request):
 
 def get_person(request):
         name = user_is_logined(request=request)
-        person = None
         try :
             document_code = request.session.get('document_code','0')
             document = Document.objects.get(code=document_code)

@@ -41,7 +41,7 @@
         }
         .maindiv{
             margin-top: 10vh;
-            height: 100vh;
+            height: 100%;
             left: 0;
             margin-bottom: 10vh;
             background: linear-gradient(to bottom, #f8f9fa, #e9ecef); /* خلفية بسيطة */
@@ -64,7 +64,7 @@
         <ul class="nav nav-pills  nav-justified" >
             <li class="active"><i class="fas fa-home"></i>
                 {% if user.is_authenticated %}
-                 welcome  <a href="{% url 'person_show' %}">{{user.username}}</a>
+                 welcome  <a href="#">{{user.username}}</a>
                 {% endif %}
             </li>
             <li>        

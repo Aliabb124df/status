@@ -62,7 +62,7 @@
                     <div class = "col-6">status :  </div><div class = "col-6">{{person.status}}</div>
                     <div class = "col-6">date of issue : </div><div class = "col-6">{{person.date_of_issue}}</div>
                 </div>
-                <input type="submit" value="save">
+                <input onclick="goBack()" type="submit" value="save">
                 <a href="{% url 'refuse_with_note' %}"><button> refuse with note </button></a>
             </div>
             </form>
