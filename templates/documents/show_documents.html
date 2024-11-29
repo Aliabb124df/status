@@ -16,7 +16,9 @@
             <h3>document name : {{ document.name }}</h3>
             <h3>code : {{ document.code }}</h3>
             <h3>date : {{ document.document_date }}</h3>
-            {% if document.viewed %}
+            {% if document.done %}
+            <h3> document done</h3>
+            {% elif document.viewed %}
             <h3> document rejected</h3>
             {% else %}
             <h3> document pending</h3>

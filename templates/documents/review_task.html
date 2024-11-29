@@ -20,21 +20,22 @@
             <h3>second id : {{ document.second_national_num }}</h3>
         {% endif %}
         <h3>date : {{ document.document_date }}</h3>
-        {% if document.viewed %}
+        {% if document.done %}
+        <h3> document done</h3>
+        {% elif document.viewed %}
         <h3> document rejected</h3>
         {% else %}
         <h3> document pending</h3>
         {% endif %}
         <h3 ><textarea name=" notes : " id="" cols="40" rows="6" readonly>{{ document.notes }}</textarea></h3>
+        {% if not document.done %}
         {% if employee == '0' %}
-
         <div style="margin: 2px;"><a href="{% url 'send_notes'%}" class="btn btn-primary">add note</a></div>
         <div style="margin: 2px;"><a href="{% url 'delete_document'%}" class="btn btn-primary">Delete</a></div>
         {% else %}
         <div style="margin: 2px;"><a href="{%url 'insert_document'%}" class="btn btn-primary">check information</a></div>
         <div style="margin: 2px;"><a href="{%url 'refuse_with_note'%}" class="btn btn-primary">refuse with note</a></div>
-        
-        
+        {% endif %}
         {% endif %}
         
     </div>

@@ -80,7 +80,7 @@
 <a  style="margin: 1%;" href="{% url 'insert_task' %}" class="btn btn-primary">get {{task_name}}</a>
 {% else %}
 <a  style="margin: 1%;" href="{% url 'refuse_with_note' %}" class="btn btn-primary">refuse with note</a>
-
+<button style="margin: 1%;" onclick="donePage()"> {{task_name}} is done</button>
 <button style="margin: 1%;" onclick="printPage()">print {{task_name}}</button>
 {% endif %}
 <button onclick="goBack()">Cancel</button>
@@ -88,12 +88,17 @@
 </div>
 <script>
     
-        function goBack() {
-            window.history.back();
-        }
+    function goBack() {
+        window.history.back();
+    }
+
     function printPage() {
     window.print();
-}
+    }
+    
+    function donePage(){
+        window.location.href = `done_task`;
+    }
 </script>
 {%endblock contentside %}
 

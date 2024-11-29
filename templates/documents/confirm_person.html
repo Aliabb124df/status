@@ -80,6 +80,7 @@
 {% if employee == '0' %}
 <a  style="margin: 1%;" href="{% url 'insert_task' %}" class="btn btn-primary">get {{task_name}}</a>
 {% else %}
+<button style="margin: 1%;" onclick="donePage()"> {{task_name}} is done</button>
 <button onclick="printPage()">print {{task_name}}</button>
 {% endif %}
 <button onclick="goBack()">Cancel</button>
@@ -91,8 +92,11 @@
         window.history.back();
     }
     function printPage() {
-    window.print();
-}
+        window.print();
+    }
+    function donePage(){
+        window.location.href = `done_task`;
+    }
 </script>
 {%endblock contentside %}
 

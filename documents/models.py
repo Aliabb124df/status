@@ -8,6 +8,7 @@ class Document(models.Model):
     second_national_num = models.CharField(max_length=15,null=True,blank=True)
     document_date = models.DateTimeField(default=datetime.now)
     viewed = models.BooleanField(default=False)
+    done = models.BooleanField(default=False)
     notes = models.TextField(null=True,blank=True)
 
     def __str__(self):

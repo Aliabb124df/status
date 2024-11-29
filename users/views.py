@@ -59,7 +59,7 @@ def move_tasked_person(tasked_person):
     return person
 
 def person_is_here(request):
-    try:
+    
         print('here')
         page_name = 'person who not in the data base'
         name = user_is_logined(request=request)
@@ -70,14 +70,14 @@ def person_is_here(request):
             else:
                 if TaskPerson.objects.filter(person_name=name).exists() :
                     choices = ['add personal information','show new documents']
-                    return render(request,'pages/main.html',{'choices':choices,'page_name':page_name})
+                    return render(request,'pages/main_new.html',{'choices':choices,'page_name':page_name})
                 else:    
                     return redirect(add_person_information)            
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def add_person_information(request):   
-    try:
+    
         person_name=user_is_logined(request)
         error=' '
         task_name = 'add information'
@@ -94,18 +94,16 @@ def add_person_information(request):
                 person_s.code = code
                 person_s.save()
                 request.session['document_code'] = code
-                print('1')
                 return redirect(person_is_here)
             else:
                 error = data.errors
-        return render(request,'users/person_in.html',{'person':TaskPerson_in,'error':error,'task_name':task_name})
-    except:
-        print('2')
-
-        return HttpResponse('sorry there is an error please try another thing')
+        if Person.objects.filter(person_name=person_name).exists():        
+            return render(request,'users/person_in.html',{'person':TaskPerson_in,'error':error,'task_name':task_name})
+        else :
+            return render(request,'users/person_in_new.html',{'person':TaskPerson_in,'error':error,'task_name':task_name})
 
 def person_in(request):
-    try:
+    
         error=' '
         task_name = 'add person'
         if request.method == "POST":
@@ -115,7 +113,7 @@ def person_in(request):
                 data.save()
                 Person_s = TaskPerson.objects.get(national_num = national_num,code=None)
                 national_num = Person_s.national_num
-                request.session['task_name'] = 'add person'
+                request.session['task_name'] = 'task_name'
                 request.session['second_national_num'] = national_num
                 code = documents.views.insert_task_code(request)
                 Person_s.code = code
@@ -125,11 +123,11 @@ def person_in(request):
             else:
                 error = data.errors
         return render(request,'users/person_in.html',{'person':TaskPerson_in,'error':error,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def person_save(request):
-    try:
+    
         error=' '
         task_name = 'save person'
         document_code = request.session.get('document_code','0')
@@ -137,21 +135,24 @@ def person_save(request):
         second_national_num = document.second_national_num
         if Person.objects.filter(national_num=second_national_num).exists():
             person_added = Person.objects.get(national_num=second_national_num)
-            if person_added.person_name == None :
-                tasked_person_added = TaskPerson.objects.get(code=document_code)
-                person_added = move_person(tasked_person_added)
-                if request.method == "POST":
-                    person_added.save()
-                    tasked_person_added.delete()
-                    documents.views.delete_document(request)
-            else :
+            person_name = person_added.person_name
+            if person_name == None :
+                person_added.delete()
+            else:
                 error = 'the asked person can not modify'
+        tasked_person_added = TaskPerson.objects.get(code=document_code)
+        person_added = move_person(tasked_person_added)
+        if request.method == "POST":
+            person_added.save()
+            tasked_person_added.delete()
+            document.done = True
+            document.save()
         return render(request,'users/person_save.html',{'person':person_added,'error':error,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def information_save(request):
-    try:
+    
         error=' '
         task_name = 'save person information'
         document_code = request.session.get('document_code','0')
@@ -169,10 +170,11 @@ def information_save(request):
         if request.method == "POST":
             person_added.save()
             tasked_person_added.delete()
-            documents.views.delete_document(request)
+            document.done = True
+            document.save()
         return render(request,'users/person_save.html',{'person':person_added,'error':error,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def get_by_obj(national_num):
     if Person.objects.filter(national_num = national_num).exists() :
@@ -237,23 +239,23 @@ def get_family(national_num):
     return family 
 
 def person_show(request):
-    try:
+    
         name = user_is_logined(request=request)
         person = Person.objects.get(person_name=name)
         task_name = 'birth register'
         request.session['task_name'] = task_name
         return render(request,'users/person_in.html',{'person':person,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def main(request):
-    try:
+    
         user_is_logined(request=request)
         page_name = 'main'
         choices = ['choose document','assert information','show documents']
         return render(request,'pages/main.html',{'choices':choices,'page_name':page_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def assert_information(request):
     user_is_logined(request=request)
@@ -262,7 +264,7 @@ def assert_information(request):
     return render(request,'pages/main.html',{'choices':choices,'page_name':page_name})
 
 def get_choice(request):
-    try:
+    
         if request.method == 'POST':
             name = request.POST.get('name')
             choices = {
@@ -282,11 +284,11 @@ def get_choice(request):
             url = f'{path}'
             return JsonResponse({'status': 'redirect', 'url': url})
         return JsonResponse({'status': 'fail'}, status=400)
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def parent_in(request):#add parent
-    try:
+    
         person_name = user_is_logined(request=request)
         error=' '
         task_name = 'add parent'
@@ -308,11 +310,11 @@ def parent_in(request):#add parent
             else:
                 error = data.errors
         return render(request,'users/parent.html',{'parent':Parent_in,'error':error,'person_name':person_name,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def parent_save(request):
-    try:
+    
         tasked_person = documents.views.get_person(request)
         error=' '
         task_name = 'save parent'
@@ -335,17 +337,18 @@ def parent_save(request):
                     parent = move_person(tasked_parent)
                     parent.save()
                     tasked_parent.delete()
-                    documents.views.delete_document(request)
+                    document.done = True
+                    document.save()
                 else : 
                     error = 'there\'s a person with this national id , just him can modify his informations'
             else : 
                 error = 'the person who asked not inserted his informations'
         return render(request,'users/person_save.html',{'person':tasked_parent,'error':error,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def index(request):
-    try:
+    
         dex = ''
         file = open("test.csv")
         csvreader = csv.reader(file)
@@ -361,11 +364,11 @@ def index(request):
                 dex = 'they are in'
         file.close()
         return render(request,'pages/pages.html',{'dex':dex})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
     
 def event_in(request):
-    try:
+    
         error = ''
         person_name = person_name = user_is_logined(request=request)
         task_name = 'add event'
@@ -403,11 +406,11 @@ def event_in(request):
             else:
                 error = data.errors
         return render(request,'users/partner.html',{'event':Partner_in,'error':error,'person_name':person_name,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def partner_in(request):
-    try:
+    
         error = '' 
         task_name = 'add partner'
         person_name = person_name = user_is_logined(request=request)
@@ -444,11 +447,11 @@ def partner_in(request):
             else:
                 error = data.errors
         return render(request,'users/partner_in.html',{'person':TaskPerson_in,'error':error,'person_name':person_name,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def add_marrid(request):
-    try:
+    
         tasked_person = documents.views.get_person(request)
         tasked_person_name = tasked_person.person_name
         error=' '
@@ -480,15 +483,16 @@ def add_marrid(request):
                 relation = Marrid(national_hus=national_hus,national_wife=national_wife,date_of_event=date_of_event,image=image)
                 relation.save()
                 tasked_partner.delete()
-                documents.views.delete_document(request)
+                document.done = True
+                document.save()
             else : 
                 error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':partner,'error':error,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
  
 def add_divorce(request):
-    try:
+    
         tasked_person = documents.views.get_person(request)
         tasked_person_name = tasked_person.person_name
         error=' '
@@ -519,15 +523,16 @@ def add_divorce(request):
             relation = Divorce(national_hus=national_hus,national_wife=national_wife,date_of_event=date_of_event,image=image)
             relation.save()
             tasked_partner.delete()
-            documents.views.delete_document(request)
+            document.done = True
+            document.save()
         else : 
             error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':partner,'error':error,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
  
 def add_widower(request):
-    try:
+    
         tasked_person = documents.views.get_person(request)
         tasked_person_name = tasked_person.person_name
         error=' '
@@ -557,12 +562,13 @@ def add_widower(request):
                 relation = Widower(national_hus=national_hus,national_wife=national_wife,date_of_widower=date_of_widower,image=image)
                 relation.save()
                 tasked_partner.delete()
-                documents.views.delete_document(request)
+                document.done = True
+                document.save()
             else : 
                 error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':partner,'error':error,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
  
 def get_first_relation(person):
     first_relation = []
@@ -583,7 +589,7 @@ def get_first_relation(person):
     return first_relation
 
 def death_record(request):
-    try:
+    
         name = user_is_logined(request=request)
         person = Person.objects.get(person_name=name)
         error=' '
@@ -617,11 +623,11 @@ def death_record(request):
             else:
                 error = data.errors
         return render(request,'users/died_person.html',{'died':Dead_in,'error':error,'person_name':name,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def died_person_record(request):
-    try:
+    
         error = ''
         task_name = 'death record'
         person_name = person_name = user_is_logined(request=request)
@@ -650,11 +656,11 @@ def died_person_record(request):
             else:
                 error = data.errors
         return render(request,'users/partner_in.html',{'person':TaskPerson_in,'error':error,'person_name':person_name,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def death_save(request):
-    try:
+    
         tasked_person = documents.views.get_person(request)
         tasked_person_name = tasked_person.person_name
         error=' '
@@ -686,14 +692,15 @@ def death_save(request):
                     relation = Dead(national_num=dead_national_num,date_of_event=date_of_event,place_of_death=place_of_death,image=image)
                     relation.save()
                     tasked_dead.delete()
-                    documents.views.delete_document(request)
+                    document.done = True
+                    document.save()
                 else :
                     error = "there\'re no relation betwin the person and the dead person"
             else : 
                 error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':tasked_dead,'error':error,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
  
 
     

@@ -8,7 +8,7 @@ from documents.views import show_documents
 from django.http import HttpResponse
 
 def check_pass(request):
-    try :
+    
         task_name = 'reset password'
         error=' '
         if request.method == "POST":
@@ -26,11 +26,11 @@ def check_pass(request):
             else:
                 error = data.errors
         return render(request,'registering/pass.html',{'form':Reset_pass,'error':error,'task_name':task_name}) 
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def reset_pass(request):
-    try :
+    
         task_name = 'type id'
         error=' '
         if request.method == "POST":
@@ -46,8 +46,8 @@ def reset_pass(request):
             else:
                 error = data.errors
         return render(request,'registering/pass.html',{'form':Check_id,'error':error,'task_name':task_name})    
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def log_out(request):
     logout(request)
@@ -58,7 +58,7 @@ def log_out(request):
     return redirect('log_in')
  
 def log_in(request):
-    try :
+    
         error=' '
         task_name = 'login'
         if request.method == "POST":
@@ -76,11 +76,11 @@ def log_in(request):
             else:
                 error = data.errors
         return render(request,'registering/login.html',{'user':Log_in,'error':error,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def sign_up(request):
-    try :
+    
         error=' '
         task_name = 'signup'
         if request.method == "POST":
@@ -99,11 +99,11 @@ def sign_up(request):
             else:
                 error = data.errors
         return render(request,'registering/login.html',{'user':Sign_up,'error':error,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
 
 def login_employee(request):
-    try :
+    
         task_name = 'login as employee'
         error = 'assert 12345'
         if request.session.get('employee','00000000000') != '00000000000' :
@@ -120,6 +120,6 @@ def login_employee(request):
             else :
                 error = 'wrong password assert 12345'
         return render(request,'registering/pass.html',{'form':Login_employee,'error':error,'task_name':task_name})
-    except:
-        return HttpResponse('sorry there is an error please try another thing')
+    
+        
    

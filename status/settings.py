@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-wlv@@o@z++hx)112is9lp4_u)bc)psc065hjfju$+jyky@k+8v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['aliabbas1999.pythonanywhere.com','127.0.0.1']
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # استبدلها بمضيف SMTP الخاص بك
@@ -131,6 +131,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'status/static')
 ]
+STATIC_ROOT = 'staticfiels'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = 'media/'
 
