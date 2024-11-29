@@ -64,9 +64,13 @@
                     <div class = "col-6">place of event :  </div><div class = "col-6">{{person.place_of_event}}</div> 
                     <div class = "col-6">image : </div><div class = "col-6"> {{person.image}}</div>
                 </div>
+                {% if error != 'the person had been saved succefully' %}
+                {% if error in ['the person who asked not inserted his informations',"there\'re no relation between the person and the dead person"] %}
                 <input type="submit" value="save">
-                </div>
+                {% endif %}
                 <a href="{% url 'refuse_with_note' %}"><button> refuse with note </button></a>
+                {% endif %}
+            </div>
             </form>
             <div  class="image_show">
                 {% if person.image.url %}
@@ -75,7 +79,11 @@
                 </div>
                 {% endif %}
             </div>
+            {% if error == 'the person had been saved succefully' %}
+            <a href="{% url 'show_documents' %}"><button> go back </button></a>
+            {% else %}
             <button onclick="goBack()">Cancel</button>
+            {% endif %}
         </div>
 
     <script>

@@ -133,20 +133,23 @@ def person_save(request):
         document = Document.objects.get(code=document_code)
         second_national_num = document.second_national_num
         if Person.objects.filter(national_num=second_national_num).exists():
-            person_added = Person.objects.get(national_num=second_national_num)
-            person_name = person_added.person_name
-            if person_name == None :
-                person_added.delete()
-            else:
+            person_added_exist = Person.objects.get(national_num=second_national_num)
+            person_name = person_added_exist.person_name
+            if person_name != None :
                 error = 'the asked person can not modify'
+        else :
+             person_name = 'No one'
         tasked_person_added = TaskPerson.objects.get(code=document_code)
-        person_added = move_person(tasked_person_added)
         if request.method == "POST":
+            if person_name == None :
+                person_added_exist.delete()
+            person_added = move_person(tasked_person_added)
             person_added.save()
             tasked_person_added.delete()
             document.done = True
             document.save()
-        return render(request,'users/person_save.html',{'person':person_added,'error':error,'task_name':task_name})
+            error = 'the person had been saved succefully'
+        return render(request,'users/person_save.html',{'person':tasked_person_added,'error':error,'task_name':task_name})
     
         
 
@@ -157,21 +160,22 @@ def information_save(request):
         document_code = request.session.get('document_code','0')
         document = Document.objects.get(code=document_code)
         person_national_num = document.person_national_num
-        if Person.objects.filter(national_num=person_national_num).exists():
-            past_person = Person.objects.get(national_num=person_national_num)
-            past_person.delete()
         tasked_person_added = TaskPerson.objects.get(code=document_code)
         tasked_person_added_name =tasked_person_added.person_name
-        if Person.objects.filter(person_name=tasked_person_added_name).exists():
-            past_person = Person.objects.get(person_name=tasked_person_added_name)
-            past_person.delete()
-        person_added = move_person(tasked_person_added)
         if request.method == "POST":
+            if Person.objects.filter(national_num=person_national_num).exists():
+                past_person = Person.objects.get(national_num=person_national_num)
+                past_person.delete()
+            if Person.objects.filter(person_name=tasked_person_added_name).exists():
+                past_person = Person.objects.get(person_name=tasked_person_added_name)
+                past_person.delete()
+            person_added = move_person(tasked_person_added)
             person_added.save()
             tasked_person_added.delete()
             document.done = True
             document.save()
-        return render(request,'users/person_save.html',{'person':person_added,'error':error,'task_name':task_name})
+            error = 'the person had been saved succefully'
+        return render(request,'users/person_save.html',{'person':tasked_person_added,'error':error,'task_name':task_name})
     
         
 
@@ -338,6 +342,7 @@ def parent_save(request):
                     tasked_parent.delete()
                     document.done = True
                     document.save()
+                    error = 'the person had been saved succefully'
                 else : 
                     error = 'there\'s a person with this national id , just him can modify his informations'
             else : 
@@ -484,6 +489,7 @@ def add_marrid(request):
                 tasked_partner.delete()
                 document.done = True
                 document.save()
+                error = 'the person had been saved succefully'
             else : 
                 error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':partner,'error':error,'task_name':task_name})
@@ -524,6 +530,7 @@ def add_divorce(request):
             tasked_partner.delete()
             document.done = True
             document.save()
+            error = 'the person had been saved succefully'
         else : 
             error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':partner,'error':error,'task_name':task_name})
@@ -563,6 +570,7 @@ def add_widower(request):
                 tasked_partner.delete()
                 document.done = True
                 document.save()
+                error = 'the person had been saved succefully'
             else : 
                 error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':partner,'error':error,'task_name':task_name})
@@ -693,8 +701,9 @@ def death_save(request):
                     tasked_dead.delete()
                     document.done = True
                     document.save()
+                    error = 'the person had been saved succefully'
                 else :
-                    error = "there\'re no relation betwin the person and the dead person"
+                    error = "there\'re no relation between the person and the dead person"
             else : 
                 error = 'the person who asked not inserted his informations'
         return render(request,'users/partner_save.html',{'person':tasked_dead,'error':error,'task_name':task_name})

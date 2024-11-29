@@ -62,8 +62,12 @@
                     <div class = "col-6">status :  </div><div class = "col-6">{{person.status}}</div>
                     <div class = "col-6">date of issue : </div><div class = "col-6">{{person.date_of_issue}}</div>
                 </div>
-                <input onclick="goBack()" type="submit" value="save">
+                {% if error != 'the person had been saved succefully' %}
+                {% if error != 'the asked person can not modify' %}
+                <input type="submit" value="save">
+                {% endif %}
                 <a href="{% url 'refuse_with_note' %}"><button> refuse with note </button></a>
+                {% endif %}
             </div>
             </form>
             <div  class="image_show">
@@ -73,7 +77,11 @@
                 </div>
                 {% endif %}
             </div>
+            {% if error == 'the person had been saved succefully' %}
+            <a href="{% url 'show_documents' %}"><button> go back </button></a>
+            {% else %}
             <button onclick="goBack()">Cancel</button>
+            {% endif %}
         </div>
 
     <script>
