@@ -1,16 +1,42 @@
-{% extends "pages/base.html" %}
-{%block title%}
-    sign up
-{% endblock %}
+{% extends "registering/base.html" %}
+{% load static %}
+
+{% block title %}Sign Up{% endblock %}
+
 {% block content %}
-    {{error}}
-    <div class = "row">
-        <div class = "col-3">
-            <form method="POST" action="">
-                {%csrf_token%}
-                {{user}}
-                <input type="submit" value="save">
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="card" style="width: 400px;">
+        <div class="card-body">
+            <h5 class="card-title text-center">Create Your Account</h5>
+            <form method="post" action="{% url 'account_signup' %}">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}  <!-- عرض العلامة فقط بدون الملاحظات -->
+                        {{ field }}  <!-- عرض الحقل -->
+                    </div>
+                {% endfor %}
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
             </form>
+            <p class="mt-3 text-center">Already have an account? <a href="{% url 'account_login' %}">Log in</a></p>
         </div>
     </div>
+</div>
 {% endblock %}

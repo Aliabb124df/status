@@ -28,14 +28,12 @@ DEBUG = True
 ALLOWED_HOSTS = ['aliabbas1999.pythonanywhere.com','127.0.0.1']
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # استبدلها بمضيف SMTP الخاص بك
-EMAIL_PORT = 587  # عادة ما يكون 587 لبروتوكول TLS
-EMAIL_USE_TLS = True  # أو False إذا كنت تستخدم SSL
-EMAIL_HOST_USER = 'www.aliabbas19992@gmail.com'  # بريدك الإلكتروني
-EMAIL_HOST_PASSWORD = 'Ali@#0997968787'  # كلمة مرور البريد الإلكتروني
-DEFAULT_FROM_EMAIL = 'www.aliabbas19992@gmail.com'  
-
-# Application definition
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'civilstatusplatform@gmail.com' 
+EMAIL_HOST_PASSWORD = 'tllp pyhj anjp xwlb' 
+DEFAULT_FROM_EMAIL = 'civilstatusplatform@gmail.com'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,10 +44,28 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'registering',
+    'payment',
     'documents',
     'bootstrap5',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
 ]
 
+SITE_ID = 1 
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', 
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False 
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+LOGIN_REDIRECT_URL = '/users/main'
+LOGOUT_REDIRECT_URL = '/registering/login/' 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,6 +74,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'status.urls'
@@ -113,6 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
+from django.utils.translation import gettext_lazy as _
 
 LANGUAGE_CODE = 'en-us'
 
@@ -120,9 +139,17 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
-
+LANGUAGES =[
+    ('en',_('English')),
+    ('ar',_('Arabic')),
+]
+LOCALE_PATHS =[
+    os.path.join(BASE_DIR,'locale')
+]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -131,7 +158,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'status/static')
 ]
-STATIC_ROOT = 'staticfiels'
+
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = 'media/'
 

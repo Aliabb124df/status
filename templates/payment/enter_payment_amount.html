@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/paymentstyle.css' %}">
+    <title>Enter Payment Amount</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Enter Payment Amount</h1>
+        {% if error %}
+        <p style="color:red;">{{ error }}</p>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="payment-item">
+                <input type="text" name="transaction_id" required>
+                <input type="number" name="amount" placeholder="Enter Amount" required>
+            </div>
+            <button type="submit">Save Payments</button>
+        </form>
+    </div>
+</body>
+
+</html>

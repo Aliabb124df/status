@@ -1,0 +1,25 @@
+{% extends "registering/base.html" %}
+
+{% block title %}
+    Employee Login
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h2>Employee Login</h2>
+    <h3>password is 12345</h3>
+    <h5>{{error}}</h5>
+    <form method="post" style="width: 50%; margin: 10%;">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{user.username}}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login as Employee</button>
+    </form>
+</div>
+{% endblock content %}

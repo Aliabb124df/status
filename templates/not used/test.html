@@ -370,3 +370,102 @@ def my_view(request):
             width: 100%;
         }
     }
+    //////////////////////////
+    <form method="POST" action="">
+        {%csrf_token%}
+        {{user}}
+        <input type="submit" value="save">
+    </form>
+    ///////////////////////////
+    
+def login_employee(request):
+    
+task_name = 'login as employee'
+error = 'assert 12345'
+if request.session.get('employee','00000000000') != '00000000000' :
+    del request.session['employee']
+    request.user.is_staff = False
+    return redirect(main)
+if request.method == "POST":
+    password = request.POST['password']
+    if password == '12345' :
+        name = user_is_logined(request=request)
+        request.session['employee'] = name
+        request.user.is_staff = True
+        return redirect(show_documents)
+    else :
+        error = 'wrong password assert 12345'
+return render(request,'registering/pass.html',{'form':Login_employee,'error':error,'task_name':task_name})
+
+def log_out(request):
+logout(request)
+try :
+del request.session['employee']
+except:
+pass
+return redirect('../registering/login')        
+
+
+'''def change_language(request, lang):
+translation.activate(lang)
+request.session[translation.LANGUAGE_SESSION_KEY] = lang
+return redirect(request.META.get('HTTP_REFERER', '/')) '''
+//////////////////////////
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* عدد الأعمدة */
+    gap: 20px; /* المسافة بين العناصر */
+    padding: 20px; /* حشوة داخلية للشبكة */
+}
+
+.grid-item {
+    background-color: #f0f0f0; /* لون خلفية العنصر */
+    border: 1px solid #ccc; /* حدود العنصر */
+    padding: 20px; /* حشوة داخلية داخل العنصر */
+    text-align
+}
+///////////////////////
+try:
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.ehlo()
+            server.starttls()
+            server.quit()
+            print("Connection successful")
+        except Exception as e:
+            print(f"Error: {e}")
+            print('////////////////////////////')
+        try :    
+            send_mail(
+                'Test Email',
+                'This is a test email sent from Django.',
+                'civilstatusplatform@gmail.com',
+                ['aliabbas19992@gmail.com'],
+                fail_silently=False,
+            )
+            print("Email sent successfully")
+        except BadHeaderError:
+            print("Invalid header found.")
+        except Exception as e:
+            print(f"Error sending email: {e}")
+///////////////////
+{% if user.is_authenticated %}
+        {% if user.userprofile.is_employee %}
+            <style>
+                /* تنسيق خاص بالموظف */
+                body {
+                    background-color: #e0f7fa;
+                }
+            </style>
+        {% else %}
+            <style>
+                /* تنسيق خاص بالمستخدم العادي */
+                body {
+                    background-color: #fce4ec;
+                }
+            </style>
+        {% endif %}
+    {% endif %}
+    ///////////////////////////        
+
+
+

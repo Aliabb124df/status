@@ -1,12 +1,18 @@
 from django.shortcuts import render,redirect
-from .forms import Sign_up,Log_in,Reset_pass,Check_id,Login_employee
+from .forms import Sign_up,Log_in,Reset_pass,Check_id,Login_employee,SignUpForm
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from users.models import Person
 from users.views import main,user_is_logined,add_person_information
 from documents.views import show_documents
 from django.http import HttpResponse
+from django.contrib import messages
+from allauth.account.views import SignupView, LoginView, ConfirmEmailView,PasswordChangeView,PasswordResetDoneView,PasswordResetView
+from django.utils import translation
+from django.conf import settings
 
+
+''' 
 def check_pass(request):
     
         task_name = 'reset password'
@@ -49,14 +55,6 @@ def reset_pass(request):
     
         
 
-def log_out(request):
-    logout(request)
-    try :
-        del request.session['employee']
-    except:
-        pass
-    return redirect('log_in')
- 
 def log_in(request):
     
         error=' '
@@ -102,24 +100,112 @@ def sign_up(request):
     
         
 
+def sign_up(request):
+    error = None
+    task_name = 'signup'
+    
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = User.objects.create_user(username=username, password=password)
+            user.save()
+            login(request, user)  # تسجيل الدخول مباشرة بعد التسجيل
+
+            # تحقق من وجود شخص مرتبط بالاسم
+            if Person.objects.filter(person_name=username).exists():
+                return redirect('main')  # استخدم اسم URL
+            else:
+                return redirect('add_person_information')  # استخدم اسم URL
+        else:
+            error = form.errors  # استخدام الأخطاء من النموذج
+
+    else:
+        form = SignUpForm()  # إنشاء نموذج فارغ
+
+    return render(request, 'registering/login.html', {
+        'form': form,
+        'error': error,
+        'task_name': task_name
+    })
+'''
+class CustomSignupView(SignupView):
+    template_name = 'registering/signup.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+class CustomLoginView(LoginView):
+    template_name = 'registering/login.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+class CustomConfirmEmailView(ConfirmEmailView):
+    template_name = 'registering/confirm.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+    
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'registering/password_changeV.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+    
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'registering/password_reset_done.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+    
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'registering/password_reset.html'
+
+    def get(self, request, *args, **kwargs):
+        user_language = request.session.get('django_language', 'en')
+        translation.activate(user_language)
+        return super().get(request, *args, **kwargs)
+
+def change_language(request, lang):
+    if lang in dict(settings.LANGUAGES):
+        translation.activate(lang)
+        print(lang)
+        request.session['django_language'] = lang
+        print('///')
+    print(request.META.get('HTTP_REFERER', '/'))
+    print('///')
+    return redirect(request.META.get('HTTP_REFERER', '/')) 
+
+
+def log_out(request):
+    logout(request)
+    try :
+        del request.session['employee']
+    except:
+        pass
+    return redirect('../registering/login')     
+
 def login_employee(request):
-    
-        task_name = 'login as employee'
-        error = 'assert 12345'
-        if request.session.get('employee','00000000000') != '00000000000' :
-            del request.session['employee']
-            request.user.is_staff = False
+    error = ''
+    person = Person.objects.get(person_name=request.user.username)
+    if request.method == 'POST':
+        password = request.POST['password']
+        if password == '12345':
+            person.is_employee = True
+            person.save()
+            return redirect(show_documents)
+        else :
+            error = 'wrong password, please assert 12345'
+    else :
+        if person.is_employee :
+            person.is_employee = False
+            person.save()
             return redirect(main)
-        if request.method == "POST":
-            password = request.POST['password']
-            if password == '12345' :
-                name = user_is_logined(request=request)
-                request.session['employee'] = name
-                request.user.is_staff = True
-                return redirect(show_documents)
-            else :
-                error = 'wrong password assert 12345'
-        return render(request,'registering/pass.html',{'form':Login_employee,'error':error,'task_name':task_name})
-    
-        
-   
+    return render(request, 'registering/login_employee.html',{'error':error})   

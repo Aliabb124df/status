@@ -9,7 +9,10 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
+from django.core.mail import send_mail
 
+from django.core.mail import BadHeaderError
+import smtplib
 import csv
 
 def move_person(tasked_person):
@@ -63,16 +66,14 @@ def person_is_here(request):
         print('here')
         page_name = 'person who not in the data base'
         name = user_is_logined(request=request)
-        logged_person = request.session.get('employee','0')
-        if logged_person =='0':
-            if Person.objects.filter(person_name=name).exists() :
-                return redirect(main)
-            else:
-                if TaskPerson.objects.filter(person_name=name).exists() :
-                    choices = ['add personal information','show new documents']
-                    return render(request,'pages/main_new.html',{'choices':choices,'page_name':page_name})
-                else:    
-                    return redirect(add_person_information)            
+        if Person.objects.filter(person_name=name).exists() :
+            return redirect(main)
+        else:
+            if TaskPerson.objects.filter(person_name=name).exists() :
+                choices = ['add personal information','show new documents']
+                return render(request,'pages/main_new.html',{'choices':choices,'page_name':page_name})
+            else:    
+                return redirect(add_person_information)            
     
         
 
@@ -191,7 +192,7 @@ def user_is_logined(request):
         name = request.user.username
         return name
     else :
-        return redirect ('../registering/log_in')
+        return redirect ('../registering/CustomLoginView')
 
 def get_marrid(person):
     marrid_partner=[]
@@ -252,19 +253,30 @@ def person_show(request):
         
 
 def main(request):
-    
-        user_is_logined(request=request)
+        
+        name = user_is_logined(request=request)
+        if Person.objects.filter(person_name=name).exists():
+            person = Person.objects.get(person_name=name)
+        else :
+            return redirect ('add_person_information')
         page_name = 'main'
-        choices = ['choose document','assert information','show documents']
-        return render(request,'pages/main.html',{'choices':choices,'page_name':page_name})
+        if Person.objects.get(person_name=name).is_employee:
+            choices = ['show documents','enter payment']
+        else:
+            choices = ['choose document','assert information','show documents','pay for orders','show payments']
+        return render(request,'pages/main.html',{'person':person,'choices':choices,'page_name':page_name})
     
         
 
 def assert_information(request):
-    user_is_logined(request=request)
+    name = user_is_logined(request=request)
+    if Person.objects.filter(person_name=name).exists():
+        person = Person.objects.filter(person_name=name)
+    else :
+        return redirect ('add_person_information')
     page_name = 'assert_information'
     choices = ['add personal information','add person','add parent','add event','add partner','add died person','death record']
-    return render(request,'pages/main.html',{'choices':choices,'page_name':page_name})
+    return render(request,'pages/main.html',{'person':person,'choices':choices,'page_name':page_name})
 
 def get_choice(request):
     
@@ -275,6 +287,9 @@ def get_choice(request):
                 'choose document':'../documents/choose_document',
                 'assert information':'assert_information',
                 'show documents':'../documents/show_documents',
+                'pay for orders':'../payment/orders' ,
+                'show payments': '../payment/view_payments',
+                'enter payment':'../document/enter_payment',
                 'add personal information':'add_person_information',
                 'add person':'person_in',
                 'add parent':'parent_in',

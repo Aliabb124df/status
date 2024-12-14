@@ -11,6 +11,8 @@ from .models import Document
 from datetime import datetime
 from django.contrib import messages
 from django.http import HttpResponse
+from payment.models import Order
+from django.contrib.auth.models import User
 
 def send_email_view(request):
     if request.method == 'POST':
@@ -71,8 +73,6 @@ def refuse_with_note(request):
                 error = data.errors
         return render(request,'documents/note.html',{'form':Send_notes,'error':error,'task_name':task_name})
     
-        
-
 def send_notes(request):
     
         name = user_is_logined(request=request)
@@ -96,12 +96,11 @@ def send_notes(request):
             else :
                 error = data.errors
         return render(request,'documents/note.html',{'form':Send_notes,'error':error,'task_name':task_name})
-    
-        
-
+         
 def family_register(request):
     
         person = get_person(request=request)
+        employee = person
         task_name = 'family register'
         event = False
         if person.status == 'single':
@@ -113,7 +112,6 @@ def family_register(request):
         national_num = person.national_num
         family = get_family(national_num=national_num)
         request.session['task_name'] = task_name
-        employee = request.session.get('employee','0')
         return render(request,'documents/confirm_family.html',{'person':person,'family':family,'task_name':task_name,'event':event,'employee':employee})
     
         
@@ -124,7 +122,7 @@ def birth_register(request):
         task_name = 'birth register'
         event = False
         request.session['task_name'] = task_name
-        employee = request.session.get('employee','0')
+        employee = person
         return render(request,'documents/confirm_person.html',{'person':person,'task_name':task_name,'event':event,'employee':employee})
     
         
@@ -160,7 +158,7 @@ def show_marriage_register(request):
         family.append(husband)
         family.append(wife)
         request.session['second_national_num'] = wife.national_num
-        employee = request.session.get('employee','0')
+        employee = person
         return render(request,'documents/confirm_family.html',{'person':person,'family':family,'task_name':task_name,'event':event,'employee':employee})
     
         
@@ -213,7 +211,7 @@ def dead_register_show(request):
                     family.append(dead_person)
                     event = Dead.objects.get(national_num=national_dead)
                     request.session['task_name'] = task_name
-                    employee = request.session.get('employee','0')
+                    employee = person
                 else :
                     error = "the person who asking can't see this dead person"
             else :
@@ -243,7 +241,7 @@ def dead_register(request):
                             family.append(dead_person)
                             event = Dead.objects.get(national_num=national_dead)
                             request.session['task_name'] = task_name
-                            employee = request.session.get('employee','0')
+                            employee = person
                             return render(request,'documents/confirm_person.html',{'person':person,'task_name':task_name,'person_name':person_name,'event':event,'employee':employee})
                         else :
                             error = "you can't see this dead person"
@@ -297,22 +295,22 @@ def review_task(request):
             request.session['document_code'] = code
         document = Document.objects.get(code=code)
         task_name = document.name    
-        employee = request.session.get('employee','0')
-        return render(request,'documents/review_task.html',{'document':document,'task_name':task_name,'employee':employee}) 
+        name = user_is_logined(request=request) 
+        person = Person.objects.get(person_name=name)
+        return render(request,'documents/review_task.html',{'document':document,'task_name':task_name,'person':person}) 
     
         
 
 def show_documents(request):
     
         name = user_is_logined(request=request) 
-        employee = request.session.get('employee','0')
         person = Person.objects.get(person_name=name)
         task_name = 'show documents'
         documents = []
-        if employee == '0':
-            documents = Document.objects.filter(person_national_num=person.national_num)
+        if person.is_employee:
+            documents = Document.objects.filter(viewed=False,done=False,paid='paid')
         else :
-            documents = Document.objects.filter(viewed=False,done=False)
+            documents = Document.objects.filter(person_national_num=person.national_num)
         return render(request,'documents/show_documents.html',{'documents':documents,'task_name':task_name})
     
         
@@ -338,10 +336,24 @@ def done_task(request):
     del request.session['document_code'] 
     return redirect(show_documents)
 
+amounts = {'family register':1000,
+               'birth register':1000,
+                'marriage register':1000,
+                'divorce register':1000,
+                'dead register':1000,
+                'add information' : 1000,
+                'add person':1000,
+                'add parent':1000,
+                'add marrid' : 1000,
+                'add divorce':1000,
+                'add widower':1000,
+                'death record':1000
+               }
+
 def insert_task(request):
-    
-        employee = request.session.get('employee','0')
-        if employee =='0':
+        name = user_is_logined(request=request) 
+        person = Person.objects.get(person_name=name)
+        if not person.is_employee:
             last_document = Document.objects.order_by('code').last()
             if last_document:
                 code = int(last_document.code) + 1
@@ -354,12 +366,15 @@ def insert_task(request):
             notes = '  '
             document = Document(name=task_name,code=code,person_national_num=person_national_num,second_national_num=second_national_num,viewed=viewed,notes=notes)
             document.save()
+            user_id = User.objects.get(username=person.person_name).id
+            amount =amounts[task_name]
+            order = Order(user=user_id,code=code,amount=amount)
+            order.save()
             del request.session['task_name']
             request.session['second_national_num']='ads'
             del request.session['second_national_num']
         return redirect(main)
-    
-        
+         
 
 def insert_task_code(request):
     last_document = Document.objects.order_by('code').last()
@@ -381,6 +396,10 @@ def insert_task_code(request):
         notes=notes
         )
     document.save()
+    user_id = User.objects.get(username=person.person_name).id
+    amount =amounts[task_name]
+    order = Order(user=user_id,code=code,amount=amount)
+    order.save()
     del request.session['task_name']
     request.session['second_national_num']='ads'
     del request.session['second_national_num']

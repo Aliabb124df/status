@@ -5,6 +5,18 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
 
+class SignUpForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.fields['password'].widget = forms.PasswordInput()
+
+
 class Sign_up(ModelForm):
     class Meta:
         model = User

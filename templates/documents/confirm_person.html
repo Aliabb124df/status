@@ -13,7 +13,7 @@
     .grid-item {
         background-color: #f0f0f0;
         padding: 10px;
-        border: 1px solid #ccc;
+        border: 3px solid #0a0a0a;
         text-align: center;
     }
     .show{
@@ -77,11 +77,11 @@
         {% endif %}
     </div>
 </form>
-{% if employee == '0' %}
-<a  style="margin: 1%;" href="{% url 'insert_task' %}" class="btn btn-primary">get {{task_name}}</a>
-{% else %}
+{% if employee.is_employee %}
 <button style="margin: 1%;" onclick="donePage()"> {{task_name}} is done</button>
 <button onclick="printPage()">print {{task_name}}</button>
+{% else %}
+<a  style="margin: 1%;" href="{% url 'insert_task' %}" class="btn btn-primary">get {{task_name}}</a>
 {% endif %}
 <button onclick="goBack()">Cancel</button>
 

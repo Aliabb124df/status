@@ -9,6 +9,7 @@ class Document(models.Model):
     document_date = models.DateTimeField(default=datetime.now)
     viewed = models.BooleanField(default=False)
     done = models.BooleanField(default=False)
+    paid = models.CharField(max_length=15,default='not paid')
     notes = models.TextField(null=True,blank=True)
 
     def __str__(self):

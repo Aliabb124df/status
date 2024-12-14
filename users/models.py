@@ -33,6 +33,7 @@ class Person(models.Model):
     religion = models.CharField(max_length=9,choices=religion_person,default='muslim')
     gender = models.CharField(max_length=7,choices=gender_person,default='male')
     status = models.CharField(max_length=8,choices=status_person,default='single')
+    is_employee = models.BooleanField(default=False)
     image = models.ImageField(upload_to='image/%y/%m/%d', blank=True, null=True)
 
     def __str__(self):
@@ -119,5 +120,3 @@ class Dead(models.Model):
     
     def __str__(self):
         return self.national_num
-
-
